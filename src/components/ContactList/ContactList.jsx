@@ -1,32 +1,34 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from '../redux/operations';
-import { selectVisibleContact } from "components/redux/selectors";
-import css from './ContactList.module.css';
-import { toast } from "react-toastify";
+import { deleteContact } from 'redux/contacts/operations';
+import toast from 'react-hot-toast';
+import { Contact } from 'components/Contact/Contact';
+import { ContactsList } from './ContactList.styled';
+import { selectFilteredContacts } from 'redux/contacts/selectors';
 
+export const ContactList = () => {
+  const dispatch = useDispatch();
+  const filteredContacts = useSelector(selectFilteredContacts);
 
-const ContactList = () => {
-    const dispatch = useDispatch();
-    const contacts = useSelector(selectVisibleContact);
-    const notify = () => toast.warning(`Delete contact!`, {position: toast.POSITION.TOP_LEFT});
+  const notify = () =>
+    toast.error('Contact successfully deleted.', {
+      duration: 2000,
+      position: 'bottom-left',
+    });
 
-        return (
-            <>
-                <ul className={css.contactList}>
-                    {contacts.map(({ name, phone, id}) => {
-                        return (
-                            <li key={id} className={css.contactsItem}>
-                            <p>
-                                {name}: <span>{phone}</span>
-                            </p>
-                            <button className={css.itemBtn}
-                                    onClick={() => dispatch(deleteContact(id),
-                                                    notify())}>Delete</button>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </>
-        );
-    }
-export default ContactList
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id))
+      .unwrap()
+      .then(() => {
+        notify();
+      });
+  };
+
+  return (
+    <ContactsList>
+      <Contact
+        contacts={filteredContacts}
+        handleDeleteContact={handleDeleteContact}
+      />
+    </ContactsList>
+  );
+};

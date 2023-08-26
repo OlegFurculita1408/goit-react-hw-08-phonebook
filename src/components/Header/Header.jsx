@@ -1,10 +1,10 @@
-import css from './Header.module.css';
+import { Box } from '@chakra-ui/react';
+import { Navigation } from 'components/Navigation/Navigation';
 
-const Header = () => {
-    return (
-      <header className={css.header}>
-        <h1 className={css.title}>Phonebook</h1>
-      </header>
-    );
-}
-export default Header
+export const Header = () => {
+  return (
+    <Box as="header" bg="snow-white" boxShadow="lg" p="6" rounded="sx" mb="30px">
+      <Navigation />
+    </Box>
+  );
+};
